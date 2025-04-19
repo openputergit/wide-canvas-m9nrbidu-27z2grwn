@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lawyer Assistant & Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        body {
+            background: linear-gradient(45deg, #4158D0, #C850C0, #FFCC70);
+            min-height: 100vh;
+        }
+        .chart-container {
+            position: relative;
+            height: 200px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="p-4">
+    <div id="app" class="max-w-7xl mx-auto">
+        <!-- Login Form -->
+        <div id="loginForm" class="glass p-8 rounded-xl max-w-md mx-auto mt-20">
+            <h2 class="text-3xl font-bold text-white mb-6 text-center">Lawyer Login</h2>
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <input type="email" id="email" placeholder="Email" class="w-full p-3 rounded bg-white/10 text-white placeholder-white/70 outline-none">
+                </div>
+                <div>
+                    <input type="password" id="password" placeholder="Password" class="w-full p-3 rounded bg-white/10 text-white placeholder-white/70 outline-none">
+                </div>
+                <button type="submit" class="w-full p-3 rounded bg-white/20 text-white font-semibold hover:bg-white/30 transition">Login</button>
+            </form>
+        </div>
+
+        <!-- Main Dashboard (Hidden by default) -->
+        <div id="dashboard" class="hidden">
+            <!-- Navigation -->
+            <nav class="glass rounded-xl p-4 mb-6">
+                <div class="flex justify-between items-center">
+                    <h1 class="text-2xl font-bold text-white">Lawyer Assistant</h1>
+                    <div class="flex space-x-4">
+                        <button onclick="showSection('dashboardContent')" class="text-white hover:text-white/70">Dashboard</button>
+                        <button onclick="showSection('clientsContent')" class="text-white hover:text-white/70">Clients</button>
+                        <button onclick="showSection('casesContent')" class="text-white hover:text-white/70">Cases</button>
+                        <button onclick="showSection('paymentsContent')" class="text-white hover:text-white/70">Payments</button>
+                        <button onclick="logout()" class="text-white hover:text-white/70">Logout</button>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Dashboard Content -->
+            <div id="dashboardContent" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="glass p-6 rounded-xl">
+                    <h3 class="text-xl font-semibold text-white mb-4">Overview</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between">
+                            <span class="text-white/70">Total Clients</span>
+                            <span class="text-white font-semibold">24</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-white/70">Active Cases</span>
+                            <span class="text-white font-semibold">12</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-white/70">Pending Payments</span>
+                            <span class="text-white font-semibold">$15,000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass p-6 rounded-xl">
+                    <h3 class="text-xl font-semibold text-white mb-4">Upcoming Hearings</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-white">Johnson vs State</p>
+                                <p class="text-white/70 text-sm">High Court</p>
+                            </div>
+                            <p class="text-white">Tomorrow</p>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-white">Smith Property Case</p>
+                                <p class="text-white/70 text-sm">District Court</p>
+                            </div>
+                            <p class="text-white">In 3 days</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass p-6 rounded-xl">
+                    <h3 class="text-xl font-semibold text-white mb-4">Recent Payments</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-white">Robert Brown</p>
+                                <p class="text-white/70 text-sm">Criminal Case</p>
+                            </div>
+                            <p class="text-white">$2,500</p>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-white">Emily White</p>
+                                <p class="text-white/70 text-sm">Civil Case</p>
+                            </div>
+                            <p class="text-white">$1,800</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Clients Section -->
+            <div id="clientsContent" class="hidden">
+                <div class="glass p-6 rounded-xl">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-semibold text-white">Clients</h3>
+                        <button onclick="showAddClientForm()" class="bg-white/20 text-white px-4 py-2 rounded hover:bg-white/30">Add Client</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-white">
+                            <thead>
+                                <tr class="text-left border-b border-white/20">
+                                    <th class="py-3">Name</th>
+                                    <th class="py-3">Email</th>
+                                    <th class="py-3">Phone</th>
+                                    <th class="py-3">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="clientsTable">
+                                <!-- Client rows will be added here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cases Section -->
+            <div id="casesContent" class="hidden">
+                <div class="glass p-6 rounded-xl">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-semibold text-white">Cases</h3>
+                        <button onclick="showAddCaseForm()" class="bg-white/20 text-white px-4 py-2 rounded hover:bg-white/30">Add Case</button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="casesGrid">
+                        <!-- Case cards will be added here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payments Section -->
+            <div id="paymentsContent" class="hidden">
+                <div class="glass p-6 rounded-xl">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-semibold text-white">Payments</h3>
+                        <button onclick="showAddPaymentForm()" class="bg-white/20 text-white px-4 py-2 rounded hover:bg-white/30">Add Payment</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-white">
+                            <thead>
+                                <tr class="text-left border-b border-white/20">
+                                    <th class="py-3">Client</th>
+                                    <th class="py-3">Amount</th>
+                                    <th class="py-3">Date</th>
+                                    <th class="py-3">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="paymentsTable">
+                                <!-- Payment rows will be added here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Dummy data
+        const dummyClients = [
+            { id: 1, name: "John Doe", email: "john@example.com", phone: "123-456-7890" },
+            { id: 2, name: "Jane Smith", email: "jane@example.com", phone: "098-765-4321" }
+        ];
+
+        const dummyCases = [
+            { id: 1, title: "Property Dispute", client: "John Doe", status: "Ongoing", nextHearing: "2024-02-01" },
+            { id: 2, title: "Civil Case", client: "Jane Smith", status: "Upcoming", nextHearing: "2024-02-15" }
+        ];
+
+        const dummyPayments = [
+            { id: 1, client: "John Doe", amount: 5000, date: "2024-01-15", status: "Paid" },
+            { id: 2, client: "Jane Smith", amount: 3000, date: "2024-01-20", status: "Pending" }
+        ];
+
+        // Authentication
+        function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // Simple validation
+            if (email && password) {
+                document.getElementById('loginForm').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                loadDashboard();
+            }
+        }
+
+        function logout() {
+            document.getElementById('loginForm').classList.remove('hidden');
+            document.getElementById('dashboard').classList.add('hidden');
+        }
+
+        // Navigation
+        function showSection(sectionId) {
+            ['dashboardContent', 'clientsContent', 'casesContent', 'paymentsContent'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById(sectionId).classList.remove('hidden');
+
+            if (sectionId === 'clientsContent') loadClients();
+            if (sectionId === 'casesContent') loadCases();
+            if (sectionId === 'paymentsContent') loadPayments();
+        }
+
+        // Clients Management
+        function loadClients() {
+            const tableBody = document.getElementById('clientsTable');
+            tableBody.innerHTML = dummyClients.map(client => `
+                <tr class="border-b border-white/20">
+                    <td class="py-3">${client.name}</td>
+                    <td class="py-3">${client.email}</td>
+                    <td class="py-3">${client.phone}</td>
+                    <td class="py-3">
+                        <button onclick="editClient(${client.id})" class="text-white/70 hover:text-white mr-2">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button onclick="deleteClient(${client.id})" class="text-white/70 hover:text-white">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Cases Management
+        function loadCases() {
+            const casesGrid = document.getElementById('casesGrid');
+            casesGrid.innerHTML = dummyCases.map(case_ => `
+                <div class="glass p-4 rounded-xl">
+                    <h4 class="text-xl font-semibold text-white mb-2">${case_.title}</h4>
+                    <p class="text-white/70">Client: ${case_.client}</p>
+                    <p class="text-white/70">Status: ${case_.status}</p>
+                    <p class="text-white/70">Next Hearing: ${case_.nextHearing}</p>
+                    <div class="mt-4 flex space-x-2">
+                        <button onclick="editCase(${case_.id})" class="text-white/70 hover:text-white">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button onclick="deleteCase(${case_.id})" class="text-white/70 hover:text-white">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Payments Management
+        function loadPayments() {
+            const tableBody = document.getElementById('paymentsTable');
+            tableBody.innerHTML = dummyPayments.map(payment => `
+                <tr class="border-b border-white/20">
+                    <td class="py-3">${payment.client}</td>
+                    <td class="py-3">$${payment.amount}</td>
+                    <td class="py-3">${payment.date}</td>
+                    <td class="py-3">
+                        <span class="px-2 py-1 rounded ${payment.status === 'Paid' ? 'bg-green-500/20' : 'bg-yellow-500/20'}">
+                            ${payment.status}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Initial load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Start with login form
+            document.getElementById('loginForm').classList.remove('hidden');
+            document.getElementById('dashboard').classList.add('hidden');
+        });
+    </script>
+<script>document.body.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); return }, { passive: false })</script>
+	</body>
+</html>
